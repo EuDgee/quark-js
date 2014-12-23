@@ -1,0 +1,126 @@
+import com.eriwen.gradle.js.JsPlugin
+import com.google.javascript.jscomp.CompilerOptions;
+import com.google.javascript.jscomp.DiagnosticGroups;
+import com.google.javascript.jscomp.CheckLevel;
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+
+        maven {
+            url "http://repo.springsource.org/libs-milestone/"
+        }
+        mavenLocal()
+    }
+    dependencies {
+        classpath "com.eriwen:gradle-js-plugin:1.12.1"
+    }
+}
+
+apply from: "lt.gradle"
+apply plugin: JsPlugin
+
+
+class IncrementalLintTask extends DefaultTask {
+    @InputDirectory
+    def File inputDir
+
+
+    @TaskAction
+    void execute(IncrementalTaskInputs inputs) {
+        def lintOk = true
+
+
+        inputs.outOfDate { f ->
+            println "linta: ${f.file.name}"
+            def proc = "gjslint --strict --custom_jsdoc_tags=namespace,event ${f}".execute()
+            proc.waitFor();
+            def text = proc.in.text
+            def matcher = text =~ "FILE"
+            if (matcher) {
+                lintOk = false
+                print text
+            }
+        }
+
+        if (!lintOk) {
+            throw new GradleException('Lint failed')
+        }
+    }
+}
+
+
+
+task incrementalLint(type: IncrementalLintTask) {
+    inputDir = file("${sources}")
+}
+
+task concatApp(
+        dependsOn: ["incrementalLint", "jcompileWrapper"],
+        type: com.eriwen.gradle.js.tasks.CombineJsTask) {
+    source = files(ltFiles)
+    dest = file("${artifactsDir}/index.js")
+}
+
+task compile(
+        type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    source = files(ltFiles)
+    dest = file("${artifactsDir}/junk.js")
+    closure {
+        warningLevel = 'VERBOSE'
+        compilationLevel = 'ADVANCED_OPTIMIZATIONS'
+        compilerOptions.setLanguageIn(CompilerOptions.LanguageMode.ECMASCRIPT5)
+        compilerOptions.setColorizeErrorOutput(true)
+        compilerOptions.setPrettyPrint(true)
+        compilerOptions.generatePseudoNames = true
+        compilerOptions.setWarningLevel(DiagnosticGroups.ACCESS_CONTROLS, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.AMBIGUOUS_FUNCTION_DECL, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.CHECK_TYPES, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.CHECK_VARIABLES, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.CHECK_USELESS_CODE, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.CONST, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.DEPRECATED, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.DUPLICATE_VARS, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.GLOBAL_THIS, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.MISSING_PROPERTIES, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.SUSPICIOUS_CODE, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.UNDEFINED_VARIABLES, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.UNDEFINED_NAMES, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.MISSING_RETURN, CheckLevel.ERROR)
+        compilerOptions.setWarningLevel(DiagnosticGroups.MISSING_PROPERTIES, CheckLevel.ERROR)
+
+        externs = fileTree('resources/externs') {
+            include '**/*.js'
+        }
+    }
+}
+
+task compileClear() << {
+    def proc = "rm -rf ${artifactsDir}/junk.js".execute()
+    proc.waitFor()
+    println proc.in.text;
+}
+
+
+task jcompileWrapper(
+        dependsOn:["compile", "compileClear"]
+) {
+
+}
+
+
+
+task combine(dependsOn: "concatApp") << {
+    def proc = "/bin/bash -c ./placeholder.sh".execute()
+    proc.waitFor()
+    println proc.in.text;
+}
+
+task clear() << {
+    def proc = "rm -rf ./artifacts ./bin ./public ".execute()
+    proc.waitFor()
+    println proc.in.text;
+}
+
+task build(dependsOn: "combine") {}

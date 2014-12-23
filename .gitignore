@@ -1,0 +1,27 @@
+### IDE Files ###
+.idea
+*.iml
+
+### Gradle files ###
+.gradle
+
+### Build artifacts ###
+/bin
+/public
+/artifacts
+
+### Test artifacts ###
+/test/coverage
+
+### Local settings ###
+/src/settings/settings.js
+
+### NPM files ###
+/node_modules
+npm-debug.log
+
+### MAAAAC ###
+.DS_Store
+
+###nu_yoba...###
+/lib

@@ -1,0 +1,10 @@
+gradle.allprojects {
+    ext.ltFiles = [
+            "${sources}/namespaces.js",
+            "${sources}/storage/i-storage.js",
+            "${sources}/storage/storage.js",
+            "${sources}/pattern/pattern.js",
+            "${sources}/dom/dom.js",
+            "${sources}/quark.js"
+    ]
+}
