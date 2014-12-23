@@ -29,14 +29,16 @@ describe('External interface', function() {
     q.set('key', 'value');
   });
 
-  xit('Set will update a DOM element', function() {
+  it('Set will update a DOM element', function(done) {
     var node = document.createElement('div');
     node.innerHTML = 'text and a little {{template}}';
     test.appendToBody(node);
 
     q.registerNode(node);
     q.set('template', 'bit of magic');
-
-    expect(node.innerText).toBe('text and a little bit of magic');
+    setTimeout(function() {
+      expect(node.innerText).toBe('text and a little bit of magic');
+      done();
+    }, 1);
   });
 });

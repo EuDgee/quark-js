@@ -32,11 +32,15 @@ q.registerNode = function(node) {
 q.set = function(key, value) {
   q.__storage.set(key, value);
   if (q.__watchers[key] !== undefined) {
-    q.__watchers[key].map(function(callback) {
-      setTimeout(function() {
-        callback(q.__storage);
-      }, 0);
-    });
+    for (var i = 0, l = q.__watchers[key].length; i < l; i += 1) {
+      setTimeout(callWatcher(i), 0);
+    }
+  }
+
+  function callWatcher(index) {
+    return function() {
+      q.__watchers[key][index](q.__storage);
+    }
   }
 };
 
