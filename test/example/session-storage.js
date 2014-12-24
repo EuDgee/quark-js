@@ -20,5 +20,9 @@ Storage.prototype.get = function(key) {
  * @inheritDoc
  */
 Storage.prototype.set = function(key, value) {
-  sessionStorage.setItem(key, value);
+  if (value === '') {
+    sessionStorage.removeItem(key);
+  } else {
+    sessionStorage.setItem(key, value);
+  }
 };
