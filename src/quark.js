@@ -7,7 +7,7 @@ q.Data;
 
 
 /**
- * @param {!Element} node
+ * @param {!Node} node
  */
 q.registerNode = function(node) {
   if (typeof node['nodeValue'] === 'string' &&
@@ -15,7 +15,10 @@ q.registerNode = function(node) {
     var value = node['nodeValue'];
     var patterns = q.pat.detectPattern(value);
     if (patterns.length > 0) {
-      q.dom.addToWatch(node.parentNode, value, patterns);
+      var element = node.parentNode;
+      if (element !== null) {
+        q.dom.addToWatch(element, value, patterns);
+      }
     }
   }
 

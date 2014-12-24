@@ -1,7 +1,7 @@
 
 
 /**
- * @param {!Element} node
+ * @param {!Node} node
  * @param {string} origValue
  * @param {!Array.<string>} patterns
  */
@@ -19,7 +19,7 @@ q.dom.addToWatch = function(node, origValue, patterns) {
 
 
 /**
- * @param {!Element} node
+ * @param {!Node} node
  * @param {string} pattern
  */
 q.dom.listenChange = function(node, pattern) {
@@ -46,7 +46,7 @@ q.dom.__addEventListener = function(element, type, handler) {
   } else if (element.attachEvent !== undefined) {
     var eventName = 'on' + type;
     if (element[eventName] === undefined) {
-      util.dom.__addCustomIEListener(element, type, handler);
+      q.dom.__addCustomIEListener(element, type, handler);
     } else {
       if (element['__ieTargetId'] === undefined) {
         element['__ieTargetId'] = 'element_' + q.dom.__lastElementId++;

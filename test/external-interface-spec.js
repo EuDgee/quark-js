@@ -80,7 +80,7 @@ describe('External interface', function() {
   it('should change div when correspondent input change value', function(done) {
     this.node.innerHTML =
         '<input id = "input-in" data-lt-value = "templ-change" />' +
-        '<div id = "div-out">{{templ-change}}</div>';
+        '<div id = "div-out">{{templ-change}} works!</div>';
     var input = document.getElementById('input-in');
     var div = document.getElementById('div-out');
     q.registerNode(this.node);
@@ -89,7 +89,7 @@ describe('External interface', function() {
     test.dispatchEvent(input, 'change');
 
     setTimeout(function() {
-      expect(div.innerText).toBe('two-way');
+      expect(div.innerText).toBe('two-way works!');
       done();
     }, 1);
   });
