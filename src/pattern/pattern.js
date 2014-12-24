@@ -1,12 +1,18 @@
 
 
 /**
+ * @type {string}
+ */
+q.pat.IGNORED_PATTERN = 'text';
+
+
+/**
  * @param {string} text
  * @return {!Array.<string>}
  */
 q.pat.detectPattern = function(text) {
   return q.mustache.parse(text).reduce(function(accum, value) {
-    if (value[0] !== 'text') {
+    if (value[0] !== q.pat.IGNORED_PATTERN) {
       accum.push(value[1]);
     }
     return accum;
