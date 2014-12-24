@@ -14,6 +14,8 @@ q.dom.addToWatch = function(node, origValue, patterns) {
         node.value = q.pat.evalPattern(origValue, patterns, q.__storage);
       }
     });
+
+    q.updateKey(patterns[i]);
   }
 };
 
@@ -23,7 +25,7 @@ q.dom.addToWatch = function(node, origValue, patterns) {
  * @param {string} pattern
  */
 q.dom.listenChange = function(node, pattern) {
-  q.dom.__addEventListener(node, 'change', function() {
+  q.dom.__addEventListener(node, 'input', function() {
     q.set(pattern, node.value);
   });
 };
