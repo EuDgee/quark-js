@@ -59,7 +59,7 @@ describe('External interface', function() {
     });
 
     input.value = 'magic';
-    test.dispatchEvent(input, 'change');
+    test.dispatchEvent(input, 'input');
   });
 
   it('change input value after model modification', function(done) {
@@ -86,11 +86,39 @@ describe('External interface', function() {
     q.registerNode(this.node);
 
     input.value = 'two-way';
-    test.dispatchEvent(input, 'change');
+    test.dispatchEvent(input, 'input');
 
     setTimeout(function() {
       expect(div.innerText).toBe('two-way works!');
       done();
     }, 1);
+  });
+
+  it('should replace patterns with empty values at start', function(done) {
+    this.node.innerHTML = '<div id = "div-start">{{start-value}}</div>';
+
+    q.registerNode(this.node);
+
+    setTimeout(function() {
+      expect(document.getElementById('div-start').innerText).toBe('');
+      done();
+    }, 1);
+  });
+
+  it('could set a custom and/filled storage', function() {
+    this.node.innerHTML = '<div id = "set-div">{{set-store}}</div>';
+    var storage = new q.Storage();
+    storage.set('set-store', 'custom storage');
+
+    q.setStorage(function() {
+      return storage;
+    });
+    q.registerNode(this.node);
+
+    setTimeout(function() {
+      expect(document.getElementById('set-div').innerText).
+          toBe('custom storage');
+      done();
+    }, 10);
   });
 });

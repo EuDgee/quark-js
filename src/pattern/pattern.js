@@ -37,10 +37,8 @@ q.pat.detectPattern = function(text) {
 q.pat.evalPattern = function(text, patterns, storage) {
   var result = text;
   for (var i = 0, l = patterns.length; i < l; i += 1) {
-    var value = storage.get(patterns[i]);
-    if (value !== undefined) {
-      result = result.replace(q.pat.OPEN + patterns[i] + q.pat.CLOSE, value);
-    }
+    result = result.replace(q.pat.OPEN + patterns[i] + q.pat.CLOSE,
+        storage.get(patterns[i]) || '');
   }
 
   return result;

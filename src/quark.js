@@ -7,6 +7,14 @@ q.Data;
 
 
 /**
+ * @param {function(): !q.IStorage} storageCreator
+ */
+q.setStorage = function(storageCreator) {
+  q.__storage = storageCreator();
+};
+
+
+/**
  * @param {!Node} node
  */
 q.registerNode = function(node) {
@@ -23,7 +31,7 @@ q.registerNode = function(node) {
   }
 
   if (node['getAttribute'] !== undefined) {
-    var pattern = node.getAttribute('data-lt-value');
+    var pattern = node.getAttribute(q.__DATA_ATTRIBUTE);
     if (typeof pattern === 'string') {
       q.dom.listenChange(node, pattern);
       q.dom.addToWatch(node, q.pat.OPEN + pattern + q.pat.CLOSE, [pattern]);
@@ -42,17 +50,7 @@ q.registerNode = function(node) {
  */
 q.set = function(key, value) {
   q.__storage.set(key, value);
-  if (q.__watchers[key] !== undefined) {
-    for (var i = 0, l = q.__watchers[key].length; i < l; i += 1) {
-      setTimeout(callWatcher(i), 0);
-    }
-  }
-
-  function callWatcher(index) {
-    return function() {
-      q.__watchers[key][index](q.__storage);
-    }
-  }
+  q.updateKey(key);
 };
 
 
@@ -76,6 +74,30 @@ q.watch = function(key, callback) {
 
   q.__watchers[key].push(callback);
 };
+
+
+/**
+ * @param {string} key
+ */
+q.updateKey = function(key) {
+  if (q.__watchers[key] !== undefined) {
+    for (var i = 0, l = q.__watchers[key].length; i < l; i += 1) {
+      setTimeout(callWatcher(i), 0);
+    }
+  }
+
+  function callWatcher(index) {
+    return function() {
+      q.__watchers[key][index](q.__storage);
+    }
+  }
+};
+
+
+/**
+ * @type {string}
+ */
+q.__DATA_ATTRIBUTE = 'data-lt-value';
 
 
 /**
