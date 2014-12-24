@@ -54,7 +54,7 @@
   /**
    * Breaks up the given `template` string into a tree of tokens. If the `tags`
    * argument is given here it must be an array with two string values: the
-   * opening and closing tags used in the template (e.g. [ "<%", "%>" ]). Of
+   * opening and closing tags used in the template (e.g. ["<%", "%>"]). Of
    * course, the default is to use mustaches (i.e. mustache.tags).
    *
    * A token is an array with at least 4 elements. The first element is the
@@ -167,12 +167,10 @@
 
       // Match the closing tag.
       if (!scanner.scan(closingTagRe)) {
-        //console.log('Unclosed tag at ' + scanner.pos);
+        //throw new Error('Unclosed tag at ' + scanner.pos);
       } else {
-
         token = [type, value, start, scanner.pos];
         tokens.push(token);
-
 
         if (type === '#' || type === '^') {
           sections.push(token);
@@ -181,11 +179,11 @@
           openSection = sections.pop();
 
           //if (!openSection)
-          //console.log('Unopened section "' + value + '" at ' + start);
-
+          //  throw new Error('Unopened section "' + value + '" at ' + start);
+          //
           //if (openSection[1] !== value)
-          //console.log('Unclosed section "' + openSection[1] + '" at ' +
-          //    start);
+          //  throw new Error('Unclosed section "' + openSection[1] + '" at ' +
+          //  start);
         } else if (type === 'name' || type === '{' || type === '&') {
           nonSpace = true;
         } else if (type === '=') {
@@ -198,8 +196,8 @@
       openSection = sections.pop();
 
       //if (openSection)
-      //console.log('Unclosed section "' + openSection[1] + '" at ' +
-      //    scanner.pos);
+      //  throw new Error('Unclosed section "' + openSection[1] + '" at ' +
+      //  scanner.pos);
     }
     return nestTokens(squashTokens(tokens));
   }
@@ -254,8 +252,8 @@
         case '/':
           section = sections.pop();
           section[5] = token[2];
-          collector = sections.length > 0 ? sections[sections.length - 1][4] :
-              nestedTokens;
+          collector = sections.length > 0 ?
+              sections[sections.length - 1][4] : nestedTokens;
           break;
         default:
           collector.push(token);
@@ -330,14 +328,13 @@
   /**
    * Represents a rendering context by wrapping a view object and
    * maintaining a reference to the parent context.
-   *
    * @param {Object} view
    * @param {*=} opt_parentContext
    * @constructor
    */
   function Context(view, opt_parentContext) {
     this.view = view == null ? {} : view;
-    this.cache = {'.': this.view};
+    this.cache = { '.': this.view };
     this.parent = opt_parentContext;
   }
 
@@ -370,7 +367,7 @@
 
           while (value != null && index < names.length)
             value = value[names[index++]];
-        } else {
+        } else if (typeof context.view == 'object') {
           value = context.view[name];
         }
 
@@ -417,9 +414,8 @@
     var cache = this.cache;
     var tokens = cache[template];
 
-    if (tokens == null) {
+    if (tokens == null)
       tokens = cache[template] = parseTemplate(template, opt_tags);
-    }
 
     return tokens;
   };
@@ -473,25 +469,27 @@
 
           if (isArray(value)) {
             for (var j = 0, valueLength = value.length; j < valueLength; ++j) {
-              buffer += this.renderTokens(token[4], context.push(value[j]),
-                  partials, originalTemplate);
+              buffer += this.renderTokens(
+                  token[4], context.push(value[j]), partials, originalTemplate);
             }
           } else if (typeof value === 'object' || typeof value === 'string') {
-            buffer += this.renderTokens(token[4], context.push(value),
-                partials, originalTemplate);
+            buffer += this.renderTokens(
+                token[4], context.push(value), partials, originalTemplate);
           } else if (isFunction(value)) {
             if (typeof originalTemplate !== 'string')
               throw new Error('Cannot use higher-order sections without ' +
-                  'the original template');
+              'the original template');
 
-            value = value.call(context.view, originalTemplate.slice(token[3],
-                token[5]), subRender);
+            // Extract the portion of the original template
+            // that the section contains.
+            value = value.call(context.view,
+                originalTemplate.slice(token[3], token[5]), subRender);
 
             if (value != null)
               buffer += value;
           } else {
-            buffer += this.renderTokens(token[4], context, partials,
-                originalTemplate);
+            buffer += this.renderTokens(
+                token[4], context, partials, originalTemplate);
           }
 
           break;
@@ -501,20 +499,20 @@
           // Use JavaScript's definition of falsy. Include empty arrays.
           // See https://github.com/janl/mustache.js/issues/186
           if (!value || (isArray(value) && value.length === 0))
-            buffer += this.renderTokens(token[4], context, partials,
-                originalTemplate);
+            buffer += this.renderTokens(
+                token[4], context, partials, originalTemplate);
 
           break;
         case '>':
           if (!partials)
             continue;
 
-          value = isFunction(partials) ? partials(token[1]) :
-              partials[token[1]];
+          value =
+              isFunction(partials) ? partials(token[1]) : partials[token[1]];
 
           if (value != null)
-            buffer += this.renderTokens(this.parse(value), context, partials,
-                value);
+            buffer +=
+                this.renderTokens(this.parse(value), context, partials, value);
 
           break;
         case '&':
@@ -541,7 +539,7 @@
   };
 
   mustache.name = 'mustache.js';
-  mustache.version = '0.8.1';
+  mustache.version = '1.0.0';
   mustache.tags = ['{{', '}}'];
 
   // All high-level mustache.* functions use this writer.
