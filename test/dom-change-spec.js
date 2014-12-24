@@ -9,7 +9,7 @@ describe('DOM: watch and change', function() {
     test.removeFromBody(this.node);
   });
 
-  it('watch elements with templates', function() {
+  it('watch div with templates', function() {
     this.node.innerHTML = '<div id="special1">{{test-template}}</div>';
     spyOn(q.dom, 'addToWatch');
 
@@ -21,7 +21,7 @@ describe('DOM: watch and change', function() {
     expect(q.dom.addToWatch.calls.count()).toBe(1);
   });
 
-  it('do not watch elements w/o templates', function() {
+  it('do not watch div w/o templates', function() {
     this.node.innerHTML = '<div></div>';
     spyOn(q.dom, 'addToWatch');
 
@@ -30,7 +30,7 @@ describe('DOM: watch and change', function() {
     expect(q.dom.addToWatch).not.toHaveBeenCalled();
   });
 
-  it('watch nested nodes', function() {
+  it('watch nested div', function() {
     this.node.innerHTML =
         '<div id = "watch1">{{watch-template-1}}' +
         '  <div id = "do-not-watch1">' +
@@ -53,5 +53,50 @@ describe('DOM: watch and change', function() {
     expect(q.dom.addToWatch).toHaveBeenCalledWith(
         document.getElementById('watch3'),
         '{{watch-template-3}} text {{more}}    ', ['watch-template-3', 'more']);
+  });
+
+  it('listen inputs with data-lt-value', function() {
+    this.node.innerHTML =
+        '<input id = "input1" data-lt-value = "template1" />' +
+        '<input id = "other" data-other-value = "stuff" />';
+    var input = document.getElementById('input1');
+    spyOn(q.dom, 'listenChange');
+
+    q.registerNode(this.node);
+
+    expect(q.dom.listenChange.calls.count()).toBe(1);
+    expect(q.dom.listenChange).toHaveBeenCalledWith(input, 'template1');
+  });
+
+  it('change input value after model modification', function(done) {
+    this.node.innerHTML =
+        '<input id = "inputt" data-lt-value = "templ-change" />' +
+        '<input id = "other" data-other-value = "stuff" />';
+    var input = document.getElementById('inputt');
+    q.registerNode(this.node);
+
+    q.set('templ-change', 'meh');
+
+    setTimeout(function() {
+      expect(input.value).toBe('meh');
+      done();
+    }, 1);
+  });
+
+  it('should change div when correspondent input change value', function(done) {
+    this.node.innerHTML =
+        '<input id = "input-in" data-lt-value = "templ-change" />' +
+        '<div id = "div-out">{{templ-change}}</div>';
+    var input = document.getElementById('input-in');
+    var div = document.getElementById('div-out');
+    q.registerNode(this.node);
+
+    input.value = 'two-way';
+    test.dispatchEvent(input, 'change');
+
+    setTimeout(function() {
+      expect(div.innerText).toBe('two-way');
+      done();
+    }, 1);
   });
 });

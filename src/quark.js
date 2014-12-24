@@ -7,7 +7,7 @@ q.Data;
 
 
 /**
- * @param {!Node} node
+ * @param {!Element} node
  */
 q.registerNode = function(node) {
   if (typeof node['nodeValue'] === 'string' &&
@@ -16,6 +16,14 @@ q.registerNode = function(node) {
     var patterns = q.pat.detectPattern(value);
     if (patterns.length > 0) {
       q.dom.addToWatch(node.parentNode, value, patterns);
+    }
+  }
+
+  if (node['getAttribute'] !== undefined) {
+    var pattern = node.getAttribute('data-lt-value');
+    if (typeof pattern === 'string') {
+      q.dom.listenChange(node, pattern);
+      q.dom.addToWatch(node, q.pat.OPEN + pattern + q.pat.CLOSE, [pattern]);
     }
   }
 
