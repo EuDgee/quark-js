@@ -25,10 +25,16 @@ q.dom.addToWatch = function(node, origValue, patterns) {
  * @param {string} pattern
  */
 q.dom.listenChange = function(node, pattern) {
-  q.dom.__addEventListener(node, 'input', function() {
+  q.dom.__addEventListener(node, q.dom._inputListenEvent, function() {
     q.set(pattern, node.value);
   });
 };
+
+
+/**
+ * @type {string}
+ */
+q.dom._inputListenEvent = 'keyup';
 
 
 /**

@@ -59,7 +59,7 @@ describe('External interface', function() {
     });
 
     input.value = 'magic';
-    test.dispatchEvent(input, 'input');
+    test.dispatchEvent(input, q.dom._inputListenEvent);
   });
 
   it('change input value after model modification', function(done) {
@@ -86,7 +86,7 @@ describe('External interface', function() {
     q.registerNode(this.node);
 
     input.value = 'two-way';
-    test.dispatchEvent(input, 'input');
+    test.dispatchEvent(input, q.dom._inputListenEvent);
 
     setTimeout(function() {
       expect(div.innerText).toBe('two-way works!');
