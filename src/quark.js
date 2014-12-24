@@ -34,7 +34,7 @@ q.registerNode = function(node) {
     var pattern = node.getAttribute(q.__DATA_ATTRIBUTE);
     if (typeof pattern === 'string') {
       q.dom.listenChange(node, pattern);
-      q.dom.addToWatch(node, q.pat.OPEN + pattern + q.pat.CLOSE, [pattern]);
+      q.dom.addToWatch(node, pattern, [pattern]);
     }
   }
 

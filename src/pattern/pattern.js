@@ -1,18 +1,6 @@
 
 
 /**
- * @type {string}
- */
-q.pat.OPEN = '{{';
-
-
-/**
- * @type {string}
- */
-q.pat.CLOSE = '}}';
-
-
-/**
  * @param {string} text
  * @return {!Array.<string>}
  */

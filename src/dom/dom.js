@@ -11,7 +11,7 @@ q.dom.addToWatch = function(node, origValue, patterns) {
       if (node.tagName === 'DIV') {
         node.innerHTML = q.pat.evalPattern(origValue, patterns, q.__storage);
       } else if (node.tagName === 'INPUT') {
-        node.value = q.pat.evalPattern(origValue, patterns, q.__storage);
+        node.value = q.__storage.get(origValue);
       }
     });
 
