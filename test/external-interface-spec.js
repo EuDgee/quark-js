@@ -119,6 +119,6 @@ describe('External interface', function() {
       expect(document.getElementById('set-div').innerText).
           toBe('custom storage');
       done();
-    }, 10);
+    }, 20);
   });
 });

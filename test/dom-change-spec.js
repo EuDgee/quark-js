@@ -67,4 +67,34 @@ describe('DOM: watch and change', function() {
     expect(q.dom.listenChange.calls.count()).toBe(1);
     expect(q.dom.listenChange).toHaveBeenCalledWith(input, 'template1');
   });
+
+  it('should change a model when textarea has been modified', function(done) {
+    this.node.innerHTML =
+        '<textarea id = "area" data-lt-value = "area-templ"></textarea>';
+    var area = document.getElementById('area');
+
+    q.registerNode(this.node);
+
+    q.watch('area-templ', function(storage) {
+      expect(storage.get('area-templ')).toBe('wizardy magic');
+      done();
+    });
+
+    area.value = 'wizardy magic';
+    test.dispatchEvent(area, q.dom._inputListenEvent);
+  });
+
+  it('should modify a textarea value on model change', function(done) {
+    this.node.innerHTML =
+        '<textarea id = "area51" data-lt-value = "t51"></textarea>';
+    q.registerNode(this.node);
+    var area = document.getElementById('area51');
+
+    q.set('t51', 'do`h');
+
+    setTimeout(function() {
+      expect(area.value).toBe('do`h');
+      done();
+    }, 1);
+  });
 });

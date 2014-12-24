@@ -26,15 +26,9 @@ q.dom.addToWatch = function(node, origValue, patterns) {
  */
 q.dom.listenChange = function(node, pattern) {
   q.dom.__addEventListener(node, q.dom._inputListenEvent, function() {
-    q.set(pattern, node.value);
+    q.set(pattern, node['value']);
   });
 };
-
-
-/**
- * @type {string}
- */
-q.dom._inputListenEvent = 'keyup';
 
 
 /**
@@ -99,3 +93,37 @@ q.dom.__addCustomIEListener = function(element, type, handler) {
 
   element['__' + type].push(handler);
 };
+
+
+/**
+ * @type {!Object}
+ */
+q.dom.__EVENT_TAGNAMES = {
+  'select': 'input',
+  'change': 'input',
+  'input': 'input'
+};
+
+
+/**
+ * @param {string} eventName
+ * @return {boolean}
+ */
+q.dom.__isEventSupported = function(eventName) {
+  var el = document.createElement(q.dom.__EVENT_TAGNAMES[eventName] || 'div');
+  eventName = 'on' + eventName;
+  var isSupported = (eventName in el);
+  if (!isSupported) {
+    el.setAttribute(eventName, 'return;');
+    isSupported = typeof el[eventName] == 'function';
+  }
+  el = null;
+  return isSupported;
+};
+
+
+/**
+ * @type {string}
+ */
+q.dom._inputListenEvent = q.dom.__isEventSupported('input') ?
+    'input' : 'keyup';
