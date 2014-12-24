@@ -167,7 +167,7 @@
 
       // Match the closing tag.
       if (!scanner.scan(closingTagRe)) {
-        console.log('Unclosed tag at ' + scanner.pos);
+        //console.log('Unclosed tag at ' + scanner.pos);
       } else {
 
         token = [type, value, start, scanner.pos];
@@ -180,12 +180,12 @@
           // Check section nesting.
           openSection = sections.pop();
 
-          if (!openSection)
-            console.log('Unopened section "' + value + '" at ' + start);
+          //if (!openSection)
+          //console.log('Unopened section "' + value + '" at ' + start);
 
-          if (openSection[1] !== value)
-            console.log('Unclosed section "' + openSection[1] + '" at ' +
-            start);
+          //if (openSection[1] !== value)
+          //console.log('Unclosed section "' + openSection[1] + '" at ' +
+          //    start);
         } else if (type === 'name' || type === '{' || type === '&') {
           nonSpace = true;
         } else if (type === '=') {
@@ -197,11 +197,11 @@
       // Make sure there are no open sections when we're done.
       openSection = sections.pop();
 
-      if (openSection)
-        console.log('Unclosed section "' + openSection[1] + '" at ' +
-        scanner.pos);
+      //if (openSection)
+      //console.log('Unclosed section "' + openSection[1] + '" at ' +
+      //    scanner.pos);
     }
-      return nestTokens(squashTokens(tokens));
+    return nestTokens(squashTokens(tokens));
   }
 
   /**

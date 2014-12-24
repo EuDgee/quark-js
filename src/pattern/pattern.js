@@ -21,7 +21,7 @@ q.pat.detectPattern = function(text) {
     if (value[0] !== 'text') {
       accum.push(value[1]);
     }
-    return accum
+    return accum;
   }, []);
 };
 
@@ -37,5 +37,5 @@ q.pat.evalPattern = function(text, patterns, storage) {
   for (var i = 0, l = patterns.length; i < l; i += 1) {
     payload[patterns[i]] = storage.get(patterns[i]);
   }
-  return q.mustache.render(text, payload)
+  return q.mustache.render(text, payload);
 };
