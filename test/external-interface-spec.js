@@ -3,10 +3,15 @@ describe('External interface', function() {
   beforeEach(function() {
     this.timeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
     jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;
+
+    this.node = document.createElement('div');
+    test.appendToBody(this.node);
   });
 
   afterEach(function() {
     jasmine.DEFAULT_TIMEOUT_INTERVAL = this.timeout;
+
+    test.removeFromBody(this.node);
   });
 
   it('Set and get', function() {
@@ -30,25 +35,23 @@ describe('External interface', function() {
   });
 
   it('Set should update a DOM element', function(done) {
-    var node = document.createElement('div');
-    node.innerHTML = 'text and a little {{template}}';
-    test.appendToBody(node);
+    var self = this;
+    this.node.innerHTML = 'text and a little {{template}}';
 
-    q.registerNode(node);
+    q.registerNode(this.node);
     q.set('template', 'bit of magic');
 
     setTimeout(function() {
-      expect(node.innerText).toBe('text and a little bit of magic');
+      expect(self.node.innerText).toBe('text and a little bit of magic');
       done();
     }, 1);
   });
 
   it('Updating a DOM element should change values in a model', function(done) {
-    var node = document.createElement('div');
-    node.innerHTML = '<input id = "test-input" data-lt-value = "template"/>';
-    test.appendToBody(node);
+    this.node.innerHTML =
+        '<input id = "test-input" data-lt-value = "template"/>';
     var input = document.getElementById('test-input');
-    q.registerNode(node);
+    q.registerNode(this.node);
 
     q.watch('template', function(storage) {
       expect(storage.get('template')).toBe('magic');
@@ -57,5 +60,37 @@ describe('External interface', function() {
 
     input.value = 'magic';
     test.dispatchEvent(input, 'change');
+  });
+
+  it('change input value after model modification', function(done) {
+    this.node.innerHTML =
+        '<input id = "inputt" data-lt-value = "templ-change" />' +
+        '<input id = "other" data-other-value = "stuff" />';
+    var input = document.getElementById('inputt');
+    q.registerNode(this.node);
+
+    q.set('templ-change', 'meh');
+
+    setTimeout(function() {
+      expect(input.value).toBe('meh');
+      done();
+    }, 1);
+  });
+
+  it('should change div when correspondent input change value', function(done) {
+    this.node.innerHTML =
+        '<input id = "input-in" data-lt-value = "templ-change" />' +
+        '<div id = "div-out">{{templ-change}}</div>';
+    var input = document.getElementById('input-in');
+    var div = document.getElementById('div-out');
+    q.registerNode(this.node);
+
+    input.value = 'two-way';
+    test.dispatchEvent(input, 'change');
+
+    setTimeout(function() {
+      expect(div.innerText).toBe('two-way');
+      done();
+    }, 1);
   });
 });

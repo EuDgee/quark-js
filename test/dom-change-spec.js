@@ -67,36 +67,4 @@ describe('DOM: watch and change', function() {
     expect(q.dom.listenChange.calls.count()).toBe(1);
     expect(q.dom.listenChange).toHaveBeenCalledWith(input, 'template1');
   });
-
-  it('change input value after model modification', function(done) {
-    this.node.innerHTML =
-        '<input id = "inputt" data-lt-value = "templ-change" />' +
-        '<input id = "other" data-other-value = "stuff" />';
-    var input = document.getElementById('inputt');
-    q.registerNode(this.node);
-
-    q.set('templ-change', 'meh');
-
-    setTimeout(function() {
-      expect(input.value).toBe('meh');
-      done();
-    }, 1);
-  });
-
-  it('should change div when correspondent input change value', function(done) {
-    this.node.innerHTML =
-        '<input id = "input-in" data-lt-value = "templ-change" />' +
-        '<div id = "div-out">{{templ-change}}</div>';
-    var input = document.getElementById('input-in');
-    var div = document.getElementById('div-out');
-    q.registerNode(this.node);
-
-    input.value = 'two-way';
-    test.dispatchEvent(input, 'change');
-
-    setTimeout(function() {
-      expect(div.innerText).toBe('two-way');
-      done();
-    }, 1);
-  });
 });
