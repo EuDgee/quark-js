@@ -10,14 +10,14 @@ describe('DOM: watch and change', function() {
   });
 
   it('watch div with templates', function() {
-    this.node.innerHTML = '<div id="special1">{{test-template}}</div>';
+    this.node.innerHTML = '<div id="special1">{{test-template}} {{test-template-2}}</div>';
     spyOn(q.dom, 'addToWatch');
 
     q.registerNode(this.node);
 
     expect(q.dom.addToWatch).toHaveBeenCalledWith(
-        document.getElementById('special1'), '{{test-template}}',
-        ['test-template']);
+        document.getElementById('special1'), '{{test-template}} {{test-template-2}}',
+        ['test-template' ,'test-template-2']);
     expect(q.dom.addToWatch.calls.count()).toBe(1);
   });
 
