@@ -3,6 +3,7 @@ gradle.allprojects {
             "${sources}/namespaces.js",
             "${sources}/storage/i-storage.js",
             "${sources}/storage/storage.js",
+            "${sources}/pattern/mustache.js",
             "${sources}/pattern/pattern.js",
             "${sources}/dom/dom.js",
             "${sources}/quark.js"

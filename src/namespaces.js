@@ -15,4 +15,10 @@ q.dom = {};
 /**
  * @namespace
  */
+q.mustache = {};
+
+
+/**
+ * @namespace
+ */
 q.pat = {};

@@ -3,13 +3,7 @@
 /**
  * @type {string}
  */
-q.pat.OPEN = '{{';
-
-
-/**
- * @type {string}
- */
-q.pat.CLOSE = '}}';
+q.pat.IGNORED_PATTERN = 'text';
 
 
 /**
@@ -17,14 +11,12 @@ q.pat.CLOSE = '}}';
  * @return {!Array.<string>}
  */
 q.pat.detectPattern = function(text) {
-  var patterns = [];
-  var pat = q.pat.__findPattern(text);
-  while (pat['found'] !== '') {
-    patterns.push(pat['found']);
-    pat = q.pat.__findPattern(pat['left']);
-  }
-
-  return patterns;
+  return q.mustache.parse(text).reduce(function(accum, value) {
+    if (value[0] !== q.pat.IGNORED_PATTERN) {
+      accum.push(value[1]);
+    }
+    return accum;
+  }, []);
 };
 
 
@@ -35,31 +27,9 @@ q.pat.detectPattern = function(text) {
  * @return {string}
  */
 q.pat.evalPattern = function(text, patterns, storage) {
-  var result = text;
+  var payload = {};
   for (var i = 0, l = patterns.length; i < l; i += 1) {
-    result = result.replace(q.pat.OPEN + patterns[i] + q.pat.CLOSE,
-        storage.get(patterns[i]) || '');
+    payload[patterns[i]] = storage.get(patterns[i]);
   }
-
-  return result;
-};
-
-
-/**
- * @param {string} text
- * @return {!Object}
- */
-q.pat.__findPattern = function(text) {
-  var result = {
-    'found': ''
-  };
-  var start = text.indexOf(q.pat.OPEN);
-  if (start >= 0) {
-    var textAfterStart = text.substr(start + q.pat.OPEN.length);
-    var end = textAfterStart.indexOf(q.pat.CLOSE);
-    result['found'] = textAfterStart.substr(0, end);
-    result['left'] = textAfterStart.substr(end + q.pat.CLOSE.length);
-  }
-
-  return result;
+  return q.mustache.render(text, payload);
 };

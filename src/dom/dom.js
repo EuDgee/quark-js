@@ -10,8 +10,8 @@ q.dom.addToWatch = function(node, origValue, patterns) {
     q.watch(patterns[i], function() {
       if (node.tagName === 'DIV') {
         node.innerHTML = q.pat.evalPattern(origValue, patterns, q.__storage);
-      } else if (node.tagName === 'INPUT' || node.tagName === 'TEXTAREA') {
-        node.value = q.pat.evalPattern(origValue, patterns, q.__storage);
+      } else if (node.tagName === 'INPUT') {
+        node.value = q.__storage.get(origValue);
       }
     });
 
