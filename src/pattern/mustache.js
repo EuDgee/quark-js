@@ -478,7 +478,7 @@
           } else if (isFunction(value)) {
             if (typeof originalTemplate !== 'string')
               throw new Error('Cannot use higher-order sections without ' +
-              'the original template');
+                  'the original template');
 
             // Extract the portion of the original template
             // that the section contains.

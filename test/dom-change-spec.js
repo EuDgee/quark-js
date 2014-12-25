@@ -10,14 +10,16 @@ describe('DOM: watch and change', function() {
   });
 
   it('watch div with templates', function() {
-    this.node.innerHTML = '<div id="special1">{{test-template}} {{test-template-2}}</div>';
+    this.node.innerHTML =
+        '<div id="special1">{{test-template}} {{test-template-2}}</div>';
     spyOn(q.dom, 'addToWatch');
 
     q.registerNode(this.node);
 
     expect(q.dom.addToWatch).toHaveBeenCalledWith(
-        document.getElementById('special1'), '{{test-template}} {{test-template-2}}',
-        ['test-template' ,'test-template-2']);
+        document.getElementById('special1'),
+        '{{test-template}} {{test-template-2}}',
+        ['test-template', 'test-template-2']);
     expect(q.dom.addToWatch.calls.count()).toBe(1);
   });
 
@@ -94,6 +96,27 @@ describe('DOM: watch and change', function() {
 
     setTimeout(function() {
       expect(area.value).toBe('do`h');
+      done();
+    }, 1);
+  });
+
+  xit('should modify div coords and size', function(done) {
+    this.node.innerHTML =
+        '<div id = "move-me" data-lt-left = "left" data-lt-top = "top" ' +
+        'data-lt-width = "width" data-lt-height = "height"></div>';
+    q.registerNode(this.node);
+    var div = document.getElementById('move-me');
+
+    q.set('left', '10px');
+    q.set('top', '11px');
+    q.set('width', '100px');
+    q.set('height', '200px');
+
+    setTimeout(function() {
+      expect(div.style.left).toBe('10px');
+      expect(div.style.top).toBe('11px');
+      expect(div.style.width).toBe('100px');
+      expect(div.style.height).toBe('200px');
       done();
     }, 1);
   });
