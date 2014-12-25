@@ -35,14 +35,15 @@ describe('External interface', function() {
   });
 
   it('Set should update a DOM element', function(done) {
-    var self = this;
-    this.node.innerHTML = 'text and a little {{template}}';
+    this.node.innerHTML = '<div id = "test-div" ' +
+        'data-lt-template = "text and a little {{template}}"></div>';
 
     q.registerNode(this.node);
     q.set('template', 'bit of magic');
 
     setTimeout(function() {
-      expect(self.node.innerText).toBe('text and a little bit of magic');
+      expect(document.getElementById('test-div').innerHTML).
+          toBe('text and a little bit of magic');
       done();
     }, 1);
   });
@@ -80,7 +81,8 @@ describe('External interface', function() {
   it('should change div when correspondent input change value', function(done) {
     this.node.innerHTML =
         '<input id = "input-in" data-lt-value = "templ-change" />' +
-        '<div id = "div-out">{{templ-change}} works!</div>';
+        '<div id = "div-out" data-lt-template = "{{templ-change}} works!">' +
+        '</div>';
     var input = document.getElementById('input-in');
     var div = document.getElementById('div-out');
     q.registerNode(this.node);
@@ -95,7 +97,8 @@ describe('External interface', function() {
   });
 
   it('should replace patterns with empty values at start', function(done) {
-    this.node.innerHTML = '<div id = "div-start">{{start-value}}</div>';
+    this.node.innerHTML =
+        '<div id = "div-start" data-lt-template = "{{start-value}}"></div>';
 
     q.registerNode(this.node);
 

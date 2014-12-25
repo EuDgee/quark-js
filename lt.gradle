@@ -1,6 +1,7 @@
 gradle.allprojects {
     ext.ltFiles = [
             "${sources}/namespaces.js",
+            "${sources}/util/util.js",
             "${sources}/storage/i-storage.js",
             "${sources}/storage/storage.js",
             "${sources}/pattern/mustache.js",

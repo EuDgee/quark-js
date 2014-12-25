@@ -5,7 +5,27 @@
  * @param {string} origValue
  * @param {!Array.<string>} patterns
  */
-q.dom.addToWatch = function(node, origValue, patterns) {
+q.dom.watchAttribute = function(node, origValue, patterns) {
+  for (var i = 0, l = patterns.length; i < l; i += 1) {
+    q.watch(patterns[i], function() {
+      if (q.__TAGS_WITH_PATTERNS.indexOf(node.tagName) >= 0) {
+        node.innerHTML = q.pat.evalPattern(origValue, patterns, q.__storage);
+      } else {
+        node.value = q.__storage.get(origValue);
+      }
+    });
+
+    q.updateKey(patterns[i]);
+  }
+};
+
+
+/**
+ * @param {!Node} node
+ * @param {string} origValue
+ * @param {!Array.<string>} patterns
+ */
+q.dom.watchStyle = function(node, origValue, patterns) {
   for (var i = 0, l = patterns.length; i < l; i += 1) {
     q.watch(patterns[i], function() {
       if (node.tagName === 'DIV') {

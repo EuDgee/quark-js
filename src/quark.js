@@ -18,28 +18,60 @@ q.setStorage = function(storageCreator) {
  * @param {!Node} node
  */
 q.registerNode = function(node) {
-  if (typeof node['nodeValue'] === 'string' &&
-      node['innerText'] === node['innerHTML'] && node['nodeType'] === 3) {
-    var value = node['nodeValue'];
-    var patterns = q.pat.detectPattern(value);
-    if (patterns.length > 0) {
-      var element = node.parentNode;
-      if (element !== null) {
-        q.dom.addToWatch(element, value, patterns);
-      }
-    }
-  }
-
   if (node['getAttribute'] !== undefined) {
-    var pattern = node.getAttribute(q.__DATA_ATTRIBUTE);
-    if (typeof pattern === 'string') {
-      q.dom.listenChange(node, pattern);
-      q.dom.addToWatch(node, pattern, [pattern]);
-    }
+    var attributes = Object.keys(q.__DATA_ATTRIBUTES);
+    attributes.map(getAttributeName).map(getAttribute).filter(filterEmpties).
+        forEach(registerAttributeNode);
+
+    var styleAttributes = Object.keys(q.__STYLE_ATTRIBUTES);
+    styleAttributes.map(getStyle).filter(filterEmpties).
+        forEach(registerStyleNode);
   }
 
-  for (var i = 0, l = node.childNodes.length; i < l; i += 1) {
-    q.registerNode(node.childNodes[i]);
+  for (var j = 0, k = node.childNodes.length; j < k; j += 1) {
+    q.registerNode(node.childNodes[j]);
+  }
+
+  /**
+   * @param {string} attribute
+   * @return {*}
+   */
+  function getAttribute(attribute) {
+    return node['getAttribute'](attribute);
+  }
+
+  /**
+   * @param {string} attribute
+   * @return {string}
+   */
+  function getAttributeName(attribute) {
+    return q.__DATA_PREFIX + attribute;
+  }
+
+  /**
+   * @param {*} value
+   * @return {boolean}
+   */
+  function filterEmpties(value) {
+    return Boolean(value);
+  }
+
+  /**
+   * @param {string} value
+   */
+  function registerAttributeNode(value) {
+    q.__registerNode(node, value, q.dom.watchAttribute);
+  }
+
+  /**
+   * @param {string} value
+   */
+  function registerStyleNode(value) {
+    q.__registerNode(node, value, q.dom.watchStyle);
+  }
+
+  function getStyle(attribute) {
+    return node['style'][attribute];
   }
 };
 
@@ -97,7 +129,45 @@ q.updateKey = function(key) {
 /**
  * @type {string}
  */
-q.__DATA_ATTRIBUTE = 'data-lt-value';
+q.__DATA_PREFIX = 'data-lt-';
+
+
+/**
+ * @type {!Object}
+ */
+q.__DATA_ATTRIBUTES = {
+  'value': 'value',
+  'template': 'innerHTML'
+};
+
+
+/**
+ * @type {!Object}
+ */
+q.__STYLE_ATTRIBUTES = {
+  'left': 'left',
+  'top': 'top',
+  'width': 'width',
+  'height': 'height'
+};
+
+
+/**
+ * Capital letters only, like in tagName
+ * @type {!Array.<string>}
+ */
+q.__TAGS_TO_LISTEN = [
+  'INPUT',
+  'TEXTAREA'
+];
+
+
+/**
+ * @type {!Array.<string>}
+ */
+q.__TAGS_WITH_PATTERNS = [
+  'DIV'
+];
 
 
 /**
@@ -110,3 +180,24 @@ q.__storage = new q.Storage();
  * @type {!Object}
  */
 q.__watchers = {};
+
+
+/**
+ * @param {!Node} node
+ * @param {string} value
+ * @param {function(!Node, string, !Array.<string>)} watcher
+ */
+q.__registerNode = function(node, value, watcher) {
+  var patterns = [value];
+  if (q.util.indexOf(node.tagName, q.__TAGS_WITH_PATTERNS) >= 0) {
+    patterns = q.pat.detectPattern(value);
+  }
+
+  if (patterns.length > 0) {
+    watcher(node, value, patterns);
+  }
+
+  if (q.util.indexOf(node.tagName, q.__TAGS_TO_LISTEN) >= 0) {
+    q.dom.listenChange(node, value);
+  }
+};

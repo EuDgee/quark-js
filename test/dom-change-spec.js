@@ -3,58 +3,65 @@ describe('DOM: watch and change', function() {
   beforeEach(function() {
     this.node = document.createElement('div');
     test.appendToBody(this.node);
+
+    this.timeout = jasmine.DEFAULT_TIMEOUT_INTERVAL;
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 500;
   });
 
   afterEach(function() {
     test.removeFromBody(this.node);
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = this.timeout;
   });
 
   it('watch div with templates', function() {
     this.node.innerHTML =
-        '<div id="special1">{{test-template}} {{test-template-2}}</div>';
-    spyOn(q.dom, 'addToWatch');
+        '<div id="special1" ' +
+        'data-lt-template="{{test-template}} {{test-template-2}}"></div>';
+    spyOn(q.dom, 'watchAttribute');
 
     q.registerNode(this.node);
 
-    expect(q.dom.addToWatch).toHaveBeenCalledWith(
+    expect(q.dom.watchAttribute).toHaveBeenCalledWith(
         document.getElementById('special1'),
         '{{test-template}} {{test-template-2}}',
         ['test-template', 'test-template-2']);
-    expect(q.dom.addToWatch.calls.count()).toBe(1);
+    expect(q.dom.watchAttribute.calls.count()).toBe(1);
   });
 
   it('do not watch div w/o templates', function() {
     this.node.innerHTML = '<div></div>';
-    spyOn(q.dom, 'addToWatch');
+    spyOn(q.dom, 'watchAttribute');
 
     q.registerNode(this.node);
 
-    expect(q.dom.addToWatch).not.toHaveBeenCalled();
+    expect(q.dom.watchAttribute).not.toHaveBeenCalled();
   });
 
   it('watch nested div', function() {
     this.node.innerHTML =
-        '<div id = "watch1">{{watch-template-1}}' +
+        '<div id = "watch1" data-lt-template = "{{watch-template-1}}">' +
         '  <div id = "do-not-watch1">' +
-        '    <div id = "watch2">{{watch-template-2}}</div>' +
+        '    <div id = "watch2" data-lt-template = "{{watch-template-2}}">' +
+        '    </div>' +
         '  </div>' +
-        '  <div id = "watch3">{{watch-template-3}} text {{more}}' +
+        '  <div id = "watch3" ' +
+        '        data-lt-template = "{{watch-template-3}} text {{more}}">' +
         '    <div id = "do-not-watch2"></div>' +
         '  </div>' +
         '</div>';
-    spyOn(q.dom, 'addToWatch');
+    spyOn(q.dom, 'watchAttribute');
     q.registerNode(this.node);
 
-    expect(q.dom.addToWatch.calls.count()).toBe(3);
-    expect(q.dom.addToWatch).toHaveBeenCalledWith(
-        document.getElementById('watch1'), '{{watch-template-1}}  ',
+    expect(q.dom.watchAttribute.calls.count()).toBe(3);
+    expect(q.dom.watchAttribute).toHaveBeenCalledWith(
+        document.getElementById('watch1'), '{{watch-template-1}}',
         ['watch-template-1']);
-    expect(q.dom.addToWatch).toHaveBeenCalledWith(
+    expect(q.dom.watchAttribute).toHaveBeenCalledWith(
         document.getElementById('watch2'), '{{watch-template-2}}',
         ['watch-template-2']);
-    expect(q.dom.addToWatch).toHaveBeenCalledWith(
+    expect(q.dom.watchAttribute).toHaveBeenCalledWith(
         document.getElementById('watch3'),
-        '{{watch-template-3}} text {{more}}    ', ['watch-template-3', 'more']);
+        '{{watch-template-3}} text {{more}}', ['watch-template-3', 'more']);
   });
 
   it('listen inputs with data-lt-value', function() {

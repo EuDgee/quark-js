@@ -22,3 +22,9 @@ q.mustache = {};
  * @namespace
  */
 q.pat = {};
+
+
+/**
+ * @namespace
+ */
+q.util = {};
