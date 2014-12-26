@@ -6,7 +6,6 @@
 .gradle
 
 ### Build artifacts ###
-/bin
 /public
 /artifacts
 
@@ -22,3 +21,6 @@ npm-debug.log
 
 ### MAAAAC ###
 .DS_Store
+
+### GIT ###
+.gitignore
