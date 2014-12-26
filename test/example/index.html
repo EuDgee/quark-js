@@ -9,8 +9,16 @@
 <body>
     Something awesome: <input data-lt-value = 'awesome'>
     <hr>
-    <div>Everything is {{awesome}}</div>
+    <div data-lt-template = "Everything is {{awesome}}"></div>
     <textarea data-lt-value = 'awesome'></textarea>
+    <hr>
+    Width: <input data-lt-template = "width">
+    Height: <input data-lt-template = "height">
+    Top: <input data-lt-template = "top">
+    Left: <input data-lt-template = "left">
+    <div data-lt-width = "width" data-lt-height = "height"
+         data-lt-top = "top" data-lt-left = "left"
+         style = "position: absolute; background-color: coral;">move me</div>
 
     <script>
         q.setStorage(function() {
