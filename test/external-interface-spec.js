@@ -26,7 +26,7 @@ describe('External interface', function() {
   });
 
   it('Watch for a key change', function(done) {
-    q.watch('key', function(storage) {
+    q.watch('key', function(key, storage) {
       expect(storage.get('key')).toBe('value');
       done();
     });
@@ -54,7 +54,7 @@ describe('External interface', function() {
     var input = document.getElementById('test-input');
     q.registerNode(this.node);
 
-    q.watch('template', function(storage) {
+    q.watch('template', function(key, storage) {
       expect(storage.get('template')).toBe('magic');
       done();
     });
@@ -122,6 +122,21 @@ describe('External interface', function() {
       expect(document.getElementById('set-div').innerText).
           toBe('custom storage');
       done();
-    }, 20);
+    }, 3000);
+  });
+
+  it('watchAll should watch all key changes', function(done) {
+    var spy = jasmine.createSpy('watch-all-spy');
+    q.watchAll(spy);
+
+    q.set('key1', 'value1');
+    q.set('key2', 'value2');
+
+    setTimeout(function() {
+      expect(spy.calls.count()).toBe(2);
+      expect(spy).toHaveBeenCalledWith('key1', q.__storage);
+      expect(spy).toHaveBeenCalledWith('key2', q.__storage);
+      done();
+    }, 1);
   });
 });

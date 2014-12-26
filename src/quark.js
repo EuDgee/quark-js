@@ -55,7 +55,7 @@ q.get = function(key) {
 
 /**
  * @param {string} key
- * @param {function(q.IStorage)} callback
+ * @param {function(string, q.IStorage)} callback
  */
 q.watch = function(key, callback) {
   if (q.__watchers[key] === undefined) {
@@ -67,18 +67,30 @@ q.watch = function(key, callback) {
 
 
 /**
+ * @param {function(string, !q.IStorage)} callback
+ */
+q.watchAll = function(callback) {
+  q.__allWatchers.push(callback);
+};
+
+
+/**
  * @param {string} key
  */
 q.updateKey = function(key) {
   if (q.__watchers[key] !== undefined) {
     for (var i = 0, l = q.__watchers[key].length; i < l; i += 1) {
-      setTimeout(callWatcher(i), 0);
+      setTimeout(callWatcher(q.__watchers[key][i]), 0);
     }
   }
 
-  function callWatcher(index) {
+  for (var j = 0, k = q.__allWatchers.length; j < k; j += 1) {
+    setTimeout(callWatcher(q.__allWatchers[j]), 0);
+  }
+
+  function callWatcher(watcher) {
     return function() {
-      q.__watchers[key][index](q.__storage);
+      watcher(key, q.__storage);
     }
   }
 };
@@ -114,3 +126,9 @@ q.__storage = new q.Storage();
  * @type {!Object}
  */
 q.__watchers = {};
+
+
+/**
+ * @type {!Array}
+ */
+q.__allWatchers = [];

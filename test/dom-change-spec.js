@@ -84,7 +84,7 @@ describe('DOM: watch and change', function() {
 
     q.registerNode(this.node);
 
-    q.watch('area-templ', function(storage) {
+    q.watch('area-templ', function(key, storage) {
       expect(storage.get('area-templ')).toBe('wizardy magic');
       done();
     });

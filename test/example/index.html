@@ -7,18 +7,17 @@
     <script src = 'index.js'></script>
 </head>
 <body>
-    Something awesome: <input data-lt-value = 'awesome'>
-    <hr>
-    <div data-lt-template = "Everything is {{awesome}}"></div>
-    <textarea data-lt-value = 'awesome'></textarea>
+    Input: <input data-lt-value = 'awesome'><br />
+    Textarea: <textarea data-lt-value = 'awesome'></textarea>
     <hr>
     Width: <input data-lt-template = "width">
     Height: <input data-lt-template = "height">
     Top: <input data-lt-template = "top">
     Left: <input data-lt-template = "left">
-    <div data-lt-width = "width" data-lt-height = "height"
-         data-lt-top = "top" data-lt-left = "left"
-         style = "position: absolute; background-color: coral;">move me</div>
+    <div data-lt-width = "width" data-lt-height = "height" data-lt-top = "top"
+         data-lt-left = "left" data-lt-template = "{{awesome}}"
+         style = "position: absolute; color: white; background-color: coral;">
+    </div>
 
     <script>
         q.setStorage(function() {
