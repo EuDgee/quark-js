@@ -21,7 +21,7 @@ q.mustache = {};
 /**
  * @namespace
  */
-q.pat = {};
+q.parse = {};
 
 
 /**

@@ -90,7 +90,7 @@ task compile(
         compilerOptions.setWarningLevel(DiagnosticGroups.MISSING_RETURN, CheckLevel.ERROR)
         compilerOptions.setWarningLevel(DiagnosticGroups.MISSING_PROPERTIES, CheckLevel.ERROR)
 
-        externs = fileTree('resources/externs') {
+        externs = fileTree('externs') {
             include '**/*.js'
         }
     }

@@ -8,13 +8,12 @@
 q.dom.watchAttribute = function(node, origValue, patterns) {
   for (var i = 0, l = patterns.length; i < l; i += 1) {
     q.watch(patterns[i], function() {
-      if (q.__TAGS_WITH_PATTERNS.indexOf(node.tagName) >= 0) {
-        node.innerHTML = q.pat.evalPattern(origValue, patterns, q.__storage);
+      if (q.parse.__TAGS_WITH_PATTERNS.indexOf(node.tagName) >= 0) {
+        node.innerHTML = q.parse.evalPattern(origValue, patterns, q.__storage);
       } else {
         node.value = q.__storage.get(origValue);
       }
     });
-
     q.updateKey(patterns[i]);
   }
 };
@@ -27,15 +26,15 @@ q.dom.watchAttribute = function(node, origValue, patterns) {
  */
 q.dom.watchStyle = function(node, origValue, patterns) {
   for (var i = 0, l = patterns.length; i < l; i += 1) {
-    q.watch(patterns[i], function() {
-      if (node.tagName === 'DIV') {
-        node.innerHTML = q.pat.evalPattern(origValue, patterns, q.__storage);
-      } else if (node.tagName === 'INPUT' || node.tagName === 'TEXTAREA') {
-        node.value = q.__storage.get(origValue);
-      }
-    });
-
+    q.watch(patterns[i], styleWatch(patterns[i]));
     q.updateKey(patterns[i]);
+
+  }
+
+  function styleWatch(styleName) {
+    return function() {
+      node['style'][styleName] = q.__storage.get(origValue);
+    }
   }
 };
 

@@ -107,7 +107,7 @@ describe('DOM: watch and change', function() {
     }, 1);
   });
 
-  xit('should modify div coords and size', function(done) {
+  it('should modify div coords and size', function(done) {
     this.node.innerHTML =
         '<div id = "move-me" data-lt-left = "left" data-lt-top = "top" ' +
         'data-lt-width = "width" data-lt-height = "height"></div>';
@@ -125,6 +125,6 @@ describe('DOM: watch and change', function() {
       expect(div.style.width).toBe('100px');
       expect(div.style.height).toBe('200px');
       done();
-    }, 1);
+    }, 100);
   });
 });

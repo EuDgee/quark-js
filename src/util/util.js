@@ -23,3 +23,31 @@ q.util.indexOf = function(element, array) {
 
   return -1;
 };
+
+
+/**
+ * @param {*} value
+ * @return {boolean}
+ */
+q.util.filterNull = function(value) {
+  return value !== null;
+};
+
+
+
+/**
+ * @constructor
+ */
+q.util.__ExtendLink = function() {};
+
+
+/**
+ * @param {!Object} Class
+ * @param {!Object} Parent
+ */
+q.util.inherits = function(Class, Parent) {
+  q.util.__ExtendLink.prototype = Parent.prototype;
+
+  Class.prototype = new q.util.__ExtendLink();
+  Class.prototype.constructor = Class;
+};

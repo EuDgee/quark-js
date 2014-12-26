@@ -4,8 +4,12 @@ gradle.allprojects {
             "${sources}/util/util.js",
             "${sources}/storage/i-storage.js",
             "${sources}/storage/storage.js",
-            "${sources}/pattern/mustache.js",
-            "${sources}/pattern/pattern.js",
+            "${sources}/parse/types.js",
+            "${sources}/parse/parser.js",
+            "${sources}/parse/attribute-parser.js",
+            "${sources}/parse/style-parser.js",
+            "${sources}/parse/mustache.js",
+            "${sources}/parse/parse.js",
             "${sources}/dom/dom.js",
             "${sources}/quark.js"
     ]

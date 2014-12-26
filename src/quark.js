@@ -19,59 +19,17 @@ q.setStorage = function(storageCreator) {
  */
 q.registerNode = function(node) {
   if (node['getAttribute'] !== undefined) {
-    var attributes = Object.keys(q.__DATA_ATTRIBUTES);
-    attributes.map(getAttributeName).map(getAttribute).filter(filterEmpties).
-        forEach(registerAttributeNode);
+    Object.keys(q.__DATA_ATTRIBUTES).
+        map(q.parse.createParser(node, q.parse.TYPES.ATTRIBUTE)).
+        filter(q.parse.isParserValid).map(q.parse.watch);
 
-    var styleAttributes = Object.keys(q.__STYLE_ATTRIBUTES);
-    styleAttributes.map(getStyle).filter(filterEmpties).
-        forEach(registerStyleNode);
+    Object.keys(q.__STYLE_ATTRIBUTES).
+        map(q.parse.createParser(node, q.parse.TYPES.STYLE)).
+        filter(q.parse.isParserValid).map(q.parse.watch);
   }
 
   for (var j = 0, k = node.childNodes.length; j < k; j += 1) {
     q.registerNode(node.childNodes[j]);
-  }
-
-  /**
-   * @param {string} attribute
-   * @return {*}
-   */
-  function getAttribute(attribute) {
-    return node['getAttribute'](attribute);
-  }
-
-  /**
-   * @param {string} attribute
-   * @return {string}
-   */
-  function getAttributeName(attribute) {
-    return q.__DATA_PREFIX + attribute;
-  }
-
-  /**
-   * @param {*} value
-   * @return {boolean}
-   */
-  function filterEmpties(value) {
-    return Boolean(value);
-  }
-
-  /**
-   * @param {string} value
-   */
-  function registerAttributeNode(value) {
-    q.__registerNode(node, value, q.dom.watchAttribute);
-  }
-
-  /**
-   * @param {string} value
-   */
-  function registerStyleNode(value) {
-    q.__registerNode(node, value, q.dom.watchStyle);
-  }
-
-  function getStyle(attribute) {
-    return node['style'][attribute];
   }
 };
 
@@ -127,12 +85,6 @@ q.updateKey = function(key) {
 
 
 /**
- * @type {string}
- */
-q.__DATA_PREFIX = 'data-lt-';
-
-
-/**
  * @type {!Object}
  */
 q.__DATA_ATTRIBUTES = {
@@ -153,24 +105,6 @@ q.__STYLE_ATTRIBUTES = {
 
 
 /**
- * Capital letters only, like in tagName
- * @type {!Array.<string>}
- */
-q.__TAGS_TO_LISTEN = [
-  'INPUT',
-  'TEXTAREA'
-];
-
-
-/**
- * @type {!Array.<string>}
- */
-q.__TAGS_WITH_PATTERNS = [
-  'DIV'
-];
-
-
-/**
  * @type {!q.IStorage}
  */
 q.__storage = new q.Storage();
@@ -180,24 +114,3 @@ q.__storage = new q.Storage();
  * @type {!Object}
  */
 q.__watchers = {};
-
-
-/**
- * @param {!Node} node
- * @param {string} value
- * @param {function(!Node, string, !Array.<string>)} watcher
- */
-q.__registerNode = function(node, value, watcher) {
-  var patterns = [value];
-  if (q.util.indexOf(node.tagName, q.__TAGS_WITH_PATTERNS) >= 0) {
-    patterns = q.pat.detectPattern(value);
-  }
-
-  if (patterns.length > 0) {
-    watcher(node, value, patterns);
-  }
-
-  if (q.util.indexOf(node.tagName, q.__TAGS_TO_LISTEN) >= 0) {
-    q.dom.listenChange(node, value);
-  }
-};
