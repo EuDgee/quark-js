@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "main": "bin/index.js",
-  "name": "Quark.Js",
+  "name": "quark-js",
 
   "repository": {
     "type": "git",
