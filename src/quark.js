@@ -49,7 +49,7 @@ q.set = function(key, value) {
  * @return {q.Data}
  */
 q.get = function(key) {
-  return q.__storage.get(key);
+  return String(q.__storage.get(key) || '');
 };
 
 

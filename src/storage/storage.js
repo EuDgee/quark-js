@@ -19,7 +19,7 @@ q.Storage = function() {
  * @return {q.Data}
  */
 q.Storage.prototype.get = function(key) {
-  return this.__storage[key];
+  return String(this.__storage[key] || '');
 };
 
 

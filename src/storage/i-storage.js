@@ -9,7 +9,7 @@ q.IStorage = function() {};
 
 /**
  * @param {string} key
- * @return {q.Data}
+ * @return {*}
  */
 q.IStorage.prototype.get = function(key) {};
 
