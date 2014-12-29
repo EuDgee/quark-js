@@ -1,6 +1,0 @@
-
-
-/**
- * @type {Console}
- */
-var console;

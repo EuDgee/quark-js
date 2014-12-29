@@ -3,33 +3,23 @@
 /**
  * @param {!Node} node
  * @param {string} origValue
- * @param {!Array.<string>} patterns
  */
-q.dom.watchAttribute = function(node, origValue, patterns) {
-  for (var i = 0, l = patterns.length; i < l; i += 1) {
-    q.watch(patterns[i], function() {
-      if (q.parse.__TAGS_WITH_PATTERNS.indexOf(node.tagName) >= 0) {
-        node.innerHTML = q.parse.evalPattern(origValue, patterns, q.__storage);
-      } else {
-        node.value = q.__storage.get(origValue);
-      }
-    });
-    q.updateKey(patterns[i]);
-  }
+q.dom.watchAttribute = function(node, origValue) {
+  q.watch(origValue, function() {
+    var value = q.dom.__VALUE_TO_WRITE[node.tagName] || q.dom.__DEFAULT_VALUE;
+    node[value] = q.__storage.get(origValue) || '';
+  });
+  q.updateKey(origValue);
 };
 
 
 /**
  * @param {!Node} node
  * @param {string} origValue
- * @param {!Array.<string>} patterns
  */
-q.dom.watchStyle = function(node, origValue, patterns) {
-  for (var i = 0, l = patterns.length; i < l; i += 1) {
-    q.watch(patterns[i], styleWatch(patterns[i]));
-    q.updateKey(patterns[i]);
-
-  }
+q.dom.watchStyle = function(node, origValue) {
+  q.watch(origValue, styleWatch(origValue));
+  q.updateKey(origValue);
 
   function styleWatch(styleName) {
     return function() {
@@ -122,6 +112,21 @@ q.dom.__EVENT_TAGNAMES = {
   'change': 'input',
   'input': 'input'
 };
+
+
+/**
+ * default - value
+ * @type {!Object.<string, string>}
+ */
+q.dom.__VALUE_TO_WRITE = {
+  'DIV': 'innerHTML'
+};
+
+
+/**
+ * @type {string}
+ */
+q.dom.__DEFAULT_VALUE = 'value';
 
 
 /**

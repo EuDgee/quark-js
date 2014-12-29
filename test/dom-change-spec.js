@@ -15,16 +15,13 @@ describe('DOM: watch and change', function() {
 
   it('watch div with templates', function() {
     this.node.innerHTML =
-        '<div id="special1" ' +
-        'data-lt-template="{{test-template}} {{test-template-2}}"></div>';
+        '<div id="special1" data-lt-template="test-template"></div>';
     spyOn(q.dom, 'watchAttribute');
 
     q.registerNode(this.node);
 
     expect(q.dom.watchAttribute).toHaveBeenCalledWith(
-        document.getElementById('special1'),
-        '{{test-template}} {{test-template-2}}',
-        ['test-template', 'test-template-2']);
+        document.getElementById('special1'), 'test-template');
     expect(q.dom.watchAttribute.calls.count()).toBe(1);
   });
 
@@ -39,13 +36,12 @@ describe('DOM: watch and change', function() {
 
   it('watch nested div', function() {
     this.node.innerHTML =
-        '<div id = "watch1" data-lt-template = "{{watch-template-1}}">' +
+        '<div id = "watch1" data-lt-template = "watch-template-1">' +
         '  <div id = "do-not-watch1">' +
-        '    <div id = "watch2" data-lt-template = "{{watch-template-2}}">' +
+        '    <div id = "watch2" data-lt-template = "watch-template-2">' +
         '    </div>' +
         '  </div>' +
-        '  <div id = "watch3" ' +
-        '        data-lt-template = "{{watch-template-3}} text {{more}}">' +
+        '  <div id = "watch3" data-lt-template = "watch-template-3">' +
         '    <div id = "do-not-watch2"></div>' +
         '  </div>' +
         '</div>';
@@ -54,14 +50,11 @@ describe('DOM: watch and change', function() {
 
     expect(q.dom.watchAttribute.calls.count()).toBe(3);
     expect(q.dom.watchAttribute).toHaveBeenCalledWith(
-        document.getElementById('watch1'), '{{watch-template-1}}',
-        ['watch-template-1']);
+        document.getElementById('watch1'), 'watch-template-1');
     expect(q.dom.watchAttribute).toHaveBeenCalledWith(
-        document.getElementById('watch2'), '{{watch-template-2}}',
-        ['watch-template-2']);
+        document.getElementById('watch2'), 'watch-template-2');
     expect(q.dom.watchAttribute).toHaveBeenCalledWith(
-        document.getElementById('watch3'),
-        '{{watch-template-3}} text {{more}}', ['watch-template-3', 'more']);
+        document.getElementById('watch3'), 'watch-template-3');
   });
 
   it('listen inputs with data-lt-value', function() {

@@ -35,15 +35,15 @@ describe('External interface', function() {
   });
 
   it('Set should update a DOM element', function(done) {
-    this.node.innerHTML = '<div id = "test-div" ' +
-        'data-lt-template = "text and a little {{template}}"></div>';
+    this.node.innerHTML =
+        '<div id = "test-div" data-lt-template = "template"></div>';
 
     q.registerNode(this.node);
     q.set('template', 'bit of magic');
 
     setTimeout(function() {
       expect(document.getElementById('test-div').innerHTML).
-          toBe('text and a little bit of magic');
+          toBe('bit of magic');
       done();
     }, 1);
   });
@@ -81,7 +81,7 @@ describe('External interface', function() {
   it('should change div when correspondent input change value', function(done) {
     this.node.innerHTML =
         '<input id = "input-in" data-lt-value = "templ-change" />' +
-        '<div id = "div-out" data-lt-template = "{{templ-change}} works!">' +
+        '<div id = "div-out" data-lt-template = "templ-change">' +
         '</div>';
     var input = document.getElementById('input-in');
     var div = document.getElementById('div-out');
@@ -91,14 +91,14 @@ describe('External interface', function() {
     test.dispatchEvent(input, q.dom._inputListenEvent);
 
     setTimeout(function() {
-      expect(div.innerText).toBe('two-way works!');
+      expect(div.innerText).toBe('two-way');
       done();
     }, 1);
   });
 
   it('should replace patterns with empty values at start', function(done) {
     this.node.innerHTML =
-        '<div id = "div-start" data-lt-template = "{{start-value}}"></div>';
+        '<div id = "div-start" data-lt-template = "start-value"></div>';
 
     q.registerNode(this.node);
 
@@ -109,7 +109,7 @@ describe('External interface', function() {
   });
 
   it('could set a custom and/filled storage', function() {
-    this.node.innerHTML = '<div id = "set-div">{{set-store}}</div>';
+    this.node.innerHTML = '<div id = "set-div">set-store</div>';
     var storage = new q.Storage();
     storage.set('set-store', 'custom storage');
 

@@ -1,41 +1,6 @@
 
 
 /**
- * @type {string}
- */
-q.parse.IGNORED_PATTERN = 'text';
-
-
-/**
- * @param {string} text
- * @return {!Array.<string>}
- */
-q.parse.detectPattern = function(text) {
-  return q.mustache.parse(text).reduce(function(accum, value) {
-    if (value[0] !== q.parse.IGNORED_PATTERN) {
-      accum.push(value[1]);
-    }
-    return accum;
-  }, []);
-};
-
-
-/**
- * @param {string} text
- * @param {!Array.<string>} patterns
- * @param {!q.IStorage} storage
- * @return {string}
- */
-q.parse.evalPattern = function(text, patterns, storage) {
-  var payload = {};
-  for (var i = 0, l = patterns.length; i < l; i += 1) {
-    payload[patterns[i]] = storage.get(patterns[i]);
-  }
-  return q.mustache.render(text, payload);
-};
-
-
-/**
  * @param {!Node} node
  * @param {!q.parse.TYPES} type
  * @return {function(string): q.parse.AttributeParser}
@@ -84,12 +49,4 @@ q.parse.__DATA_PREFIX = 'data-lt-';
 q.parse.__TAGS_TO_LISTEN = [
   'INPUT',
   'TEXTAREA'
-];
-
-
-/**
- * @type {!Array.<string>}
- */
-q.parse.__TAGS_WITH_PATTERNS = [
-  'DIV'
 ];
