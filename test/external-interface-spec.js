@@ -139,4 +139,19 @@ describe('External interface', function() {
       done();
     }, 1);
   });
+
+  it('watchAll could be used with updateKey', function(done) {
+    var times = 0;
+    q.watchAll(function(key, storage) {
+      times += 1;
+      q.updateKey(key, false);
+    });
+
+    q.set('key-u', 'value');
+
+    setTimeout(function() {
+      expect(times).toBe(1);
+      done();
+    }, 100);
+  });
 });

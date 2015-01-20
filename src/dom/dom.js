@@ -5,11 +5,17 @@
  * @param {string} origValue
  */
 q.dom.watchAttribute = function(node, origValue) {
-  q.watch(origValue, function() {
-    var value = q.dom.__VALUE_TO_WRITE[node.tagName] || q.dom.__DEFAULT_VALUE;
-    node[value] = q.__storage.get(origValue) || '';
-  });
+  q.watch(origValue, attributeWatch);
   q.updateKey(origValue);
+
+  function attributeWatch() {
+    var attribute =
+        q.dom.__VALUE_TO_WRITE[node.tagName] || q.dom.__DEFAULT_VALUE;
+    var value = q.__storage.get(origValue) || '';
+    if (node[attribute] !== value) {
+      node[attribute] = value;
+    }
+  }
 };
 
 
@@ -23,7 +29,10 @@ q.dom.watchStyle = function(node, origValue) {
 
   function styleWatch(styleName) {
     return function() {
-      node['style'][styleName] = q.__storage.get(origValue);
+      var value = q.__storage.get(origValue);
+      if (node['style'][styleName] !== value) {
+        node['style'][styleName] = value;
+      }
     }
   }
 };
@@ -35,7 +44,9 @@ q.dom.watchStyle = function(node, origValue) {
  */
 q.dom.listenChange = function(node, pattern) {
   q.dom.__addEventListener(node, q.dom._inputListenEvent, function() {
-    q.set(pattern, node['value']);
+    if (q.get(pattern) !== node['value']) {
+      q.set(pattern, node['value']);
+    }
   });
 };
 
