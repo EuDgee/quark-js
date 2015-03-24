@@ -1,5 +1,5 @@
 {
-  "version": "0.1.4",
+  "version": "0.2.0",
   "main": "bin/index.js",
   "name": "quark-js",
 
@@ -19,5 +19,9 @@
     "karma-coverage": "0.2.6",
     "karma-coffee-preprocessor": "0.2.1",
     "karma-typescript-preprocessor": "0.0.14"
+  },
+
+  "publishConfig": {
+    "registry": "http://sonatype-nexus.livetex.ru/nexus/content/repositories/livetex-npm/"
   }
 }
