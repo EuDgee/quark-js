@@ -25,18 +25,26 @@ describe('External interface', function() {
     expect(q.get('another-key')).toBe('yo');
   });
 
-  it('Watch for a key change', function(done) {
-    q.watch('key', function(key, storage) {
+  it('Watch for a key change and unwatch', function(done) {
+    var called = 0;
+    q.watch('key', function watcher(key, storage) {
+      called += 1;
       expect(storage.get('key')).toBe('value');
-      done();
+      q.unwatch('key', watcher);
+      setTimeout(check, 100);
     });
+
+    function check() {
+      expect(called).toBe(1);
+      done();
+    }
 
     q.set('key', 'value');
   });
 
   it('Set should update a DOM element', function(done) {
     this.node.innerHTML =
-        '<div id = "test-div" data-lt-template = "template"></div>';
+        '<div id = "test-div" data-q-template = "template"></div>';
 
     q.registerNode(this.node);
     q.set('template', 'bit of magic');
@@ -50,7 +58,7 @@ describe('External interface', function() {
 
   it('Updating a DOM element should change values in a model', function(done) {
     this.node.innerHTML =
-        '<input id = "test-input" data-lt-value = "template"/>';
+        '<input id = "test-input" data-q-value = "template"/>';
     var input = document.getElementById('test-input');
     q.registerNode(this.node);
 
@@ -65,7 +73,7 @@ describe('External interface', function() {
 
   it('change input value after model modification', function(done) {
     this.node.innerHTML =
-        '<input id = "inputt" data-lt-value = "templ-change" />' +
+        '<input id = "inputt" data-q-value = "templ-change" />' +
         '<input id = "other" data-other-value = "stuff" />';
     var input = document.getElementById('inputt');
     q.registerNode(this.node);
@@ -80,8 +88,8 @@ describe('External interface', function() {
 
   it('should change div when correspondent input change value', function(done) {
     this.node.innerHTML =
-        '<input id = "input-in" data-lt-value = "templ-change" />' +
-        '<div id = "div-out" data-lt-template = "templ-change">' +
+        '<input id = "input-in" data-q-value = "templ-change" />' +
+        '<div id = "div-out" data-q-template = "templ-change">' +
         '</div>';
     var input = document.getElementById('input-in');
     var div = document.getElementById('div-out');
@@ -98,7 +106,7 @@ describe('External interface', function() {
 
   it('should replace patterns with empty values at start', function(done) {
     this.node.innerHTML =
-        '<div id = "div-start" data-lt-template = "start-value"></div>';
+        '<div id = "div-start" data-q-template = "start-value"></div>';
 
     q.registerNode(this.node);
 
@@ -125,12 +133,14 @@ describe('External interface', function() {
     }, 3000);
   });
 
-  it('watchAll should watch all key changes', function(done) {
+  it('watchAll should watch all key changes and unwatchAll', function(done) {
     var spy = jasmine.createSpy('watch-all-spy');
     q.watchAll(spy);
 
     q.set('key1', 'value1');
     q.set('key2', 'value2');
+    q.unwatchAll(spy);
+    q.set('key1', 'value3');
 
     setTimeout(function() {
       expect(spy.calls.count()).toBe(2);

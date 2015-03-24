@@ -67,10 +67,35 @@ q.watch = function(key, callback) {
 
 
 /**
+ * @param {string} key
+ * @param {function(string, q.IStorage)} callback
+ */
+q.unwatch = function(key, callback) {
+  if (q.__watchers[key] !== undefined) {
+    var index = q.__watchers[key].indexOf(callback);
+    if (index >= 0) {
+      q.__watchers[key].splice(index, 1);
+    }
+  }
+};
+
+
+/**
  * @param {function(string, !q.IStorage)} callback
  */
 q.watchAll = function(callback) {
   q.__allWatchers.push(callback);
+};
+
+
+/**
+ * @param {function(string, !q.IStorage)} callback
+ */
+q.unwatchAll = function(callback) {
+  var index = q.__allWatchers.indexOf(callback);
+  if (index >= 0) {
+    q.__allWatchers.splice(index, 1);
+  }
 };
 
 

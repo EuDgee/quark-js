@@ -15,7 +15,7 @@ describe('DOM: watch and change', function() {
 
   it('watch div with templates', function() {
     this.node.innerHTML =
-        '<div id="special1" data-lt-template="test-template"></div>';
+        '<div id="special1" data-q-template="test-template"></div>';
     spyOn(q.dom, 'watchAttribute');
 
     q.registerNode(this.node);
@@ -36,12 +36,12 @@ describe('DOM: watch and change', function() {
 
   it('watch nested div', function() {
     this.node.innerHTML =
-        '<div id = "watch1" data-lt-template = "watch-template-1">' +
+        '<div id = "watch1" data-q-template = "watch-template-1">' +
         '  <div id = "do-not-watch1">' +
-        '    <div id = "watch2" data-lt-template = "watch-template-2">' +
+        '    <div id = "watch2" data-q-template = "watch-template-2">' +
         '    </div>' +
         '  </div>' +
-        '  <div id = "watch3" data-lt-template = "watch-template-3">' +
+        '  <div id = "watch3" data-q-template = "watch-template-3">' +
         '    <div id = "do-not-watch2"></div>' +
         '  </div>' +
         '</div>';
@@ -57,9 +57,9 @@ describe('DOM: watch and change', function() {
         document.getElementById('watch3'), 'watch-template-3');
   });
 
-  it('listen inputs with data-lt-value', function() {
+  it('listen inputs with data-q-value', function() {
     this.node.innerHTML =
-        '<input id = "input1" data-lt-value = "template1" />' +
+        '<input id = "input1" data-q-value = "template1" />' +
         '<input id = "other" data-other-value = "stuff" />';
     var input = document.getElementById('input1');
     spyOn(q.dom, 'listenChange');
@@ -72,7 +72,7 @@ describe('DOM: watch and change', function() {
 
   it('should change a model when textarea has been modified', function(done) {
     this.node.innerHTML =
-        '<textarea id = "area" data-lt-value = "area-templ"></textarea>';
+        '<textarea id = "area" data-q-value = "area-templ"></textarea>';
     var area = document.getElementById('area');
 
     q.registerNode(this.node);
@@ -88,7 +88,7 @@ describe('DOM: watch and change', function() {
 
   it('should modify a textarea value on model change', function(done) {
     this.node.innerHTML =
-        '<textarea id = "area51" data-lt-value = "t51"></textarea>';
+        '<textarea id = "area51" data-q-value = "t51"></textarea>';
     q.registerNode(this.node);
     var area = document.getElementById('area51');
 
@@ -102,8 +102,8 @@ describe('DOM: watch and change', function() {
 
   it('should modify div coords and size', function(done) {
     this.node.innerHTML =
-        '<div id = "move-me" data-lt-left = "left" data-lt-top = "top" ' +
-        'data-lt-width = "width" data-lt-height = "height"></div>';
+        '<div id = "move-me" data-q-left = "left" data-q-top = "top" ' +
+        'data-q-width = "width" data-q-height = "height"></div>';
     q.registerNode(this.node);
     var div = document.getElementById('move-me');
 

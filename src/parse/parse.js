@@ -39,7 +39,7 @@ q.parse.watch = function(parser) {
 /**
  * @type {string}
  */
-q.parse.__DATA_PREFIX = 'data-lt-';
+q.parse.__DATA_PREFIX = 'data-q-';
 
 
 /**
