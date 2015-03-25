@@ -22,6 +22,6 @@
   },
 
   "publishConfig": {
-    "registry": "http://sonatype-nexus.livetex.ru/nexus/content/repositories/livetex-npm/"
+    "registry": "http://sonatype-nexus.livetex.ru/nexus/content/repositories/livetex-npm-new/"
   }
 }
