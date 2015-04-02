@@ -44,8 +44,11 @@ q.dom.watchStyle = function(node, origValue) {
  */
 q.dom.listenChange = function(node, pattern) {
   q.dom.__addEventListener(node, q.dom._inputListenEvent, function() {
-    if (q.get(pattern) !== node['value']) {
-      q.set(pattern, node['value']);
+    var attribute =
+        q.dom.__VALUE_TO_READ[node.tagName] || q.dom.__DEFAULT_VALUE;
+    var value = node[attribute];
+    if (q.get(pattern) !== value) {
+      q.set(pattern, value);
     }
   });
 };
@@ -119,7 +122,7 @@ q.dom.__addCustomIEListener = function(element, type, handler) {
  * @type {!Object}
  */
 q.dom.__EVENT_TAGNAMES = {
-  'select': 'input',
+  'select': 'change',
   'change': 'input',
   'input': 'input'
 };
@@ -130,7 +133,18 @@ q.dom.__EVENT_TAGNAMES = {
  * @type {!Object.<string, string>}
  */
 q.dom.__VALUE_TO_WRITE = {
-  'DIV': 'innerHTML'
+  'DIV': 'innerHTML',
+  'SELECT': 'selectedIndex'
+};
+
+
+/**
+ * default - value
+ * @type {!Object.<string, string>}
+ */
+q.dom.__VALUE_TO_READ = {
+  'DIV': 'innerHTML',
+  'SELECT': 'selectedIndex'
 };
 
 

@@ -129,7 +129,8 @@ q.updateKey = function(key, opt_triggerAllUpdate) {
  */
 q.__DATA_ATTRIBUTES = {
   'value': 'value',
-  'template': 'innerHTML'
+  'template': 'innerHTML',
+  'selector': 'selectedIndex'
 };
 
 
