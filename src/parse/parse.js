@@ -48,5 +48,6 @@ q.parse.__DATA_PREFIX = 'data-q-';
  */
 q.parse.__TAGS_TO_LISTEN = [
   'INPUT',
-  'TEXTAREA'
+  'TEXTAREA',
+  'SELECT'
 ];
