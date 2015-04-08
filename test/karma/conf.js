@@ -45,9 +45,9 @@ module.exports = function(config) {
 
   function substituteFolders(line) {
     var mappedLine = line;
-    for (var folder in FOLDERS) {
+    Object.keys(FOLDERS).forEach(function(folder) {
       mappedLine = mappedLine.replace(folder, FOLDERS[folder]);
-    }
+    });
 
     return mappedLine;
   }

@@ -5,9 +5,6 @@
  * @param {string} origValue
  */
 q.dom.watchAttribute = function(node, origValue) {
-  q.watch(origValue, attributeWatch);
-  q.updateKey(origValue);
-
   function attributeWatch() {
     var attribute =
         q.dom.__VALUE_TO_WRITE[node.tagName] || q.dom.__DEFAULT_VALUE;
@@ -16,6 +13,9 @@ q.dom.watchAttribute = function(node, origValue) {
       node[attribute] = value;
     }
   }
+
+  q.watch(origValue, attributeWatch);
+  q.updateKey(origValue);
 };
 
 
@@ -24,9 +24,6 @@ q.dom.watchAttribute = function(node, origValue) {
  * @param {string} origValue
  */
 q.dom.watchStyle = function(node, origValue) {
-  q.watch(origValue, styleWatch(origValue));
-  q.updateKey(origValue);
-
   function styleWatch(styleName) {
     return function() {
       var value = q.__storage.get(origValue);
@@ -35,6 +32,9 @@ q.dom.watchStyle = function(node, origValue) {
       }
     }
   }
+
+  q.watch(origValue, styleWatch(origValue));
+  q.updateKey(origValue);
 };
 
 
