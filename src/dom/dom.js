@@ -70,9 +70,7 @@ q.dom.__addEventListener = function(element, type, handler) {
     element.addEventListener(type, handler, false);
   } else if (element.attachEvent !== undefined) {
     var eventName = 'on' + type;
-    if (element[eventName] === undefined) {
-      q.dom.__addCustomIEListener(element, type, handler);
-    } else {
+    if (element[eventName] !== undefined) {
       if (element['__ieTargetId'] === undefined) {
         element['__ieTargetId'] = 'element_' + q.dom.__lastElementId++;
       }
@@ -85,36 +83,6 @@ q.dom.__addEventListener = function(element, type, handler) {
       element.attachEvent(eventName, handler[listenerId]);
     }
   }
-};
-
-
-/**
- * @param {!Node|!Window} element
- * @param {string} type
- * @param {!function(Event)} handler
- */
-q.dom.__addCustomIEListener = function(element, type, handler) {
-  if (element['__customListener'] === undefined) {
-    element['__customListener'] = function(event) {
-      if (event['__type'] !== undefined) {
-        var type = event['__type'];
-        delete event['__type'];
-
-        var handlers = element['__' + type];
-        for (var i in handlers) {
-          handlers[i].call(element, event);
-        }
-      }
-    };
-
-    element.attachEvent('onhelp', element['__customListener']);
-  }
-
-  if (element['__' + type] === undefined) {
-    element['__' + type] = [];
-  }
-
-  element['__' + type].push(handler);
 };
 
 
@@ -164,7 +132,7 @@ q.dom.__isEventSupported = function(eventName) {
   var isSupported = (eventName in el);
   if (!isSupported) {
     el.setAttribute(eventName, 'return;');
-    isSupported = typeof el[eventName] == 'function';
+    isSupported = typeof el[eventName] === 'function';
   }
   el = null;
   return isSupported;

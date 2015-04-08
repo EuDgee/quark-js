@@ -104,6 +104,12 @@ q.unwatchAll = function(callback) {
  * @param {boolean=} opt_triggerAllUpdate
  */
 q.updateKey = function(key, opt_triggerAllUpdate) {
+  function callWatcher(watcher) {
+    return function() {
+      watcher(key, q.__storage);
+    }
+  }
+
   if (q.__watchers[key] !== undefined) {
     for (var i = 0, l = q.__watchers[key].length; i < l; i += 1) {
       setTimeout(callWatcher(q.__watchers[key][i]), 0);
@@ -113,12 +119,6 @@ q.updateKey = function(key, opt_triggerAllUpdate) {
   if (opt_triggerAllUpdate !== false) {
     for (var j = 0, k = q.__allWatchers.length; j < k; j += 1) {
       setTimeout(callWatcher(q.__allWatchers[j]), 0);
-    }
-  }
-
-  function callWatcher(watcher) {
-    return function() {
-      watcher(key, q.__storage);
     }
   }
 };

@@ -41,9 +41,7 @@ test.dispatchEvent = function(element, type) {
     event = document.createEventObject();
 
     var eventName = 'on' + type;
-    if (element[eventName] === undefined) {
-      util.dom.__dispatchCustomIEEvent(element, event, type);
-    } else {
+    if (element[eventName] !== undefined) {
       result = element.fireEvent(eventName, event);
     }
   } else {
@@ -54,34 +52,4 @@ test.dispatchEvent = function(element, type) {
   }
 
   return result;
-};
-
-
-/**
- * @param {!Node|!Window} element
- * @param {string} type
- * @param {!function(Event)} handler
- */
-test.__addCustomIEListener = function(element, type, handler) {
-  if (element['__customListener'] === undefined) {
-    element['__customListener'] = function(event) {
-      if (event['__type'] !== undefined) {
-        var type = event['__type'];
-        delete event['__type'];
-
-        var handlers = element['__' + type];
-        for (var i in handlers) {
-          handlers[i].call(element, event);
-        }
-      }
-    };
-
-    element.attachEvent('onhelp', element['__customListener']);
-  }
-
-  if (element['__' + type] === undefined) {
-    element['__' + type] = [];
-  }
-
-  element['__' + type].push(handler);
 };

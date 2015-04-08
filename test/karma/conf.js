@@ -31,26 +31,6 @@ module.exports = function(config) {
   var lt_gradle = '';
   var files = [];
 
-  for (var j = 0, k = LIBS.length; j < k; j += 1) {
-    files.push(LIBS[j]);
-  }
-
-
-  for (var f = 0, s = LT_GRADLES.length; f < s; f += 1) {
-    if (fs.existsSync(LT_GRADLES[f])) {
-      lt_gradle = LT_GRADLES[f];
-    }
-  }
-
-  if (lt_gradle) {
-    var data = fs.readFileSync(lt_gradle, {'encoding': 'UTF-8'});
-    var tmp = data.split('\n').map(trim).filter(isFileLine).
-        map(clearQuotesAndCommas).map(substituteFolders);
-    for (var x = 0; x < tmp.length; x++) {
-      files.push(tmp[x]);
-    }
-  }
-
   function trim(line) {
     return line.trim();
   }
@@ -70,6 +50,26 @@ module.exports = function(config) {
     }
 
     return mappedLine;
+  }
+
+  for (var j = 0, k = LIBS.length; j < k; j += 1) {
+    files.push(LIBS[j]);
+  }
+
+
+  for (var f = 0, s = LT_GRADLES.length; f < s; f += 1) {
+    if (fs.existsSync(LT_GRADLES[f])) {
+      lt_gradle = LT_GRADLES[f];
+    }
+  }
+
+  if (lt_gradle) {
+    var data = fs.readFileSync(lt_gradle, {'encoding': 'UTF-8'});
+    var tmp = data.split('\n').map(trim).filter(isFileLine).
+        map(clearQuotesAndCommas).map(substituteFolders);
+    for (var x = 0; x < tmp.length; x++) {
+      files.push(tmp[x]);
+    }
   }
 
   for (var i = 0, l = testFiles.length; i < l; i += 1) {
