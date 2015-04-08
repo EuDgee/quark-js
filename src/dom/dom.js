@@ -30,7 +30,7 @@ q.dom.watchStyle = function(node, origValue) {
       if (node['style'][styleName] !== value) {
         node['style'][styleName] = value;
       }
-    }
+    };
   }
 
   q.watch(origValue, styleWatch(origValue));

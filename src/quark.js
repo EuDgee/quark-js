@@ -107,7 +107,7 @@ q.updateKey = function(key, opt_triggerAllUpdate) {
   function callWatcher(watcher) {
     return function() {
       watcher(key, q.__storage);
-    }
+    };
   }
 
   if (q.__watchers[key] !== undefined) {

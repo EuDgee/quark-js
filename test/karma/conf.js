@@ -26,7 +26,7 @@ module.exports = function(config) {
 
   var fs = require('fs');
 
-  var lt_gradle = '';
+  var sourcelistFile = '';
   var files = [];
 
   function trim(line) {
@@ -57,12 +57,12 @@ module.exports = function(config) {
 
   for (var f = 0, s = LT_GRADLES.length; f < s; f += 1) {
     if (fs.existsSync(LT_GRADLES[f])) {
-      lt_gradle = LT_GRADLES[f];
+      sourcelistFile = LT_GRADLES[f];
     }
   }
 
-  if (lt_gradle) {
-    var data = fs.readFileSync(lt_gradle, {'encoding': 'UTF-8'});
+  if (sourcelistFile) {
+    var data = fs.readFileSync(sourcelistFile, {'encoding': 'UTF-8'});
     var tmp = data.split('\n').map(trim).filter(isFileLine).
         map(clearQuotesAndCommas).map(substituteFolders);
     for (var x = 0; x < tmp.length; x++) {

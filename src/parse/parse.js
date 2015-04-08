@@ -14,7 +14,7 @@ q.parse.createParser = function(node, type) {
     }
 
     return null;
-  }
+  };
 };
 
 
