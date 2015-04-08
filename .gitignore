@@ -13,9 +13,6 @@
 ### Test artifacts ###
 /test/coverage
 
-### Local settings ###
-/src/settings/settings.js
-
 ### NPM files ###
 /node_modules
 npm-debug.log
