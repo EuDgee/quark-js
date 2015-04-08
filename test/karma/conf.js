@@ -9,9 +9,7 @@ module.exports = function(config) {
 
   var testFiles = [
     'test/test.js',
-    'test/**/*-spec.js',
-    'test/**/*-spec.coffee',
-    'test/**/*-spec.ts'
+    'test/**/*-spec.js'
   ];
 
   var FOLDERS = {

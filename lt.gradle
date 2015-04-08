@@ -8,7 +8,6 @@ gradle.allprojects {
             "${sources}/parse/parser.js",
             "${sources}/parse/attribute-parser.js",
             "${sources}/parse/style-parser.js",
-            "${sources}/parse/mustache.js",
             "${sources}/parse/parse.js",
             "${sources}/dom/dom.js",
             "${sources}/quark.js"
