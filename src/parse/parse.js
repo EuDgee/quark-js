@@ -29,10 +29,9 @@ q.parse.isParserValid = function(parser) {
 
 /**
  * @param {q.parse.Parser} parser
- * @return {q.parse.Parser}
  */
 q.parse.watch = function(parser) {
-  return parser.watch();
+  parser.watch();
 };
 
 
