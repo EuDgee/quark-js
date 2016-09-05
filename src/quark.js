@@ -21,11 +21,11 @@ q.registerNode = function(node) {
   if (node['getAttribute'] !== undefined) {
     Object.keys(q.__DATA_ATTRIBUTES).
         map(q.parse.createParser(node, q.parse.TYPES.ATTRIBUTE)).
-        filter(q.parse.isParserValid).map(q.parse.watch);
+        filter(q.parse.isParserValid).forEach(q.parse.watch);
 
     Object.keys(q.__STYLE_ATTRIBUTES).
         map(q.parse.createParser(node, q.parse.TYPES.STYLE)).
-        filter(q.parse.isParserValid).map(q.parse.watch);
+        filter(q.parse.isParserValid).forEach(q.parse.watch);
   }
 
   for (var j = 0, k = node.childNodes.length; j < k; j += 1) {
